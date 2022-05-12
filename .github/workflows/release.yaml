@@ -11,6 +11,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
     name: Create Release
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,7 +24,7 @@ jobs:
         run: echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
         id: version
       - name: release
-        permissions: write-all
+
         uses: actions/create-release@v1
         id: create_release
         with:
@@ -35,7 +36,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: upload artifact
-        permissions: write-all
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
