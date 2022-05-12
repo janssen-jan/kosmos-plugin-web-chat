@@ -24,7 +24,7 @@ jobs:
         run: echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
         id: version
       - name: artifact
-        run: echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
+        run: echo "::set-output name=artifact::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
         id: artifact
       - name: release
 
