@@ -190,8 +190,8 @@
         </dependency>
         <dependency>
             <groupId>de.kosmos-lab.platform</groupId>
-            <version>0.8</version>
             <artifactId>kosmos-platform</artifactId>
+            <version>0.8-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
