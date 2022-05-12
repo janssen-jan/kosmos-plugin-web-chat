@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     runs-on: ubuntu-latest
     steps:
@@ -17,8 +19,6 @@ jobs:
           java-version: '14'
           distribution: 'adopt'
       - run: mvn --batch-mode --update-snapshots clean package
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: mkdir staging && cp target/*.zip staging
       - uses: actions/upload-artifact@v3
         with:
