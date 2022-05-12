@@ -23,6 +23,9 @@ jobs:
       - name: version
         run: echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
         id: version
+      - name: finalname
+        run: echo "::set-output name=version::target/$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).zip"
+        id: finalname
       - name: release
 
         uses: actions/create-release@v1
@@ -41,6 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*.zip
+          asset_path: ${{ steps.finalname.outputs.finalname }}
           asset_name: ${{ github.event.repository.name }}.zip
           asset_content_type: application/zip
