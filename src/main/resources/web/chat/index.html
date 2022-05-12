@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Test Page for WebChat">
+    <meta name="author" content="Jan Janssen">
+
+
+    <title>Test Chat Page</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <script>
+        window.addEventListener('load', function () {
+            connectToServer();
+            var input = document.getElementById("msg");
+
+            input.addEventListener("keypress", function (event) {
+                // If the user presses the "Enter" key on the keyboard
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    send();
+                }
+            });
+        })
+        let ws;
+
+
+        function connectToServer() {
+            try {
+                ws = new WebSocket(`ws://${window.location.hostname}:${window.location.port}/chatws`);
+                ws.onopen = function () {
+                    document.getElementById("connectionStatus").innerHTML = "Connected";
+                };
+                ws.onmessage = function (event) {
+                    //document.getElementById("responseFromServer").value = event.data;
+                    console.log(`got ${event.data}`)
+                    p = document.createElement("p");
+                    p.innerText = event.data;
+                    document.getElementById("messages").appendChild(p);
+
+                };
+                ws.onclose = function () {
+                    document.getElementById("connectionStatus").innerHTML = "Disconnected";
+                };
+
+                const myNode = document.getElementById("messages");
+                while (myNode.firstChild) {
+                    myNode.removeChild(myNode.lastChild);
+                }
+            } catch (e) {
+
+            }
+
+
+        }
+
+        function disconnectToServer() {
+            ws.close();
+        }
+
+        function send() {
+            try {
+                const msg = document.getElementById("msg").value;
+
+                ws.send(msg);
+                document.getElementById("msg").value = "";
+            } catch (e) {
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="header">
+        <h3 class="text-muted">WS Test Page Client</h3>
+    </div>
+
+    <div class="jumbotron_">
+        <button type="button" class="btn btn-sm btn-primary" onclick="connectToServer()">
+            Connect
+        </button>
+        <button type="button" class="btn btn-sm btn-danger" onclick="disconnectToServer()">
+            Disconnect
+        </button>
+
+
+    </div>
+
+    <div class="input-group">
+        Connection Status:
+        <span id="connectionStatus">
+          Disconnected
+      </span>
+
+    </div>
+
+
+    <input id="msg" style="width: 700px; " placeholder="Put your Message Here"></input>
+
+    <button type="button" class="btn btn-sm btn-success" onclick="send()">
+        send
+    </button>
+
+    <div id="messages">
+    </div>
+
+</div>
+<!-- /container -->
+
+</body>
+</html>
